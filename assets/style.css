@@ -1063,6 +1063,62 @@ code { font-family: monospace; font-size: 0.75rem; background: var(--surface3); 
   color: var(--accent); cursor: pointer; font-family: 'Cairo', sans-serif;
 }
 
+/* ===== EXPORT DROPDOWN ===== */
+.export-dropdown {
+  position: relative;
+  display: inline-flex;
+}
+
+.export-dropdown-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  min-width: 180px;
+  z-index: 500;
+  overflow: hidden;
+  animation: dropdownFadeIn 0.15s ease;
+}
+
+.export-dropdown-menu.open { display: block; }
+
+@keyframes dropdownFadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.export-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: right;
+  transition: background var(--transition);
+  white-space: nowrap;
+}
+.export-dropdown-item:hover { background: var(--surface3); }
+.export-dropdown-item:not(:last-child) { border-bottom: 1px solid var(--border); }
+.export-dropdown-item .item-icon { font-size: 1rem; flex-shrink: 0; }
+.export-dropdown-item .item-label { flex: 1; }
+.export-dropdown-item .item-badge {
+  font-size: 0.65rem; font-weight: 700; padding: 1px 6px; border-radius: 10px; border: 1px solid;
+}
+.export-dropdown-item.excel .item-badge { border-color: var(--secondary); color: var(--secondary); background: rgba(16,185,129,0.08); }
+.export-dropdown-item.pdf .item-badge   { border-color: var(--accent); color: var(--accent); background: rgba(244,63,94,0.08); }
+.export-dropdown-item.print .item-badge { border-color: var(--info); color: var(--info); background: rgba(56,189,248,0.08); }
+
 /* ===== MOBILE SIDEBAR ===== */
 .mobile-sidebar-overlay {
   display: none; position: fixed; inset: 0; z-index: 99;

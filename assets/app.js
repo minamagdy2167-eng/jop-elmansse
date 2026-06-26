@@ -1313,7 +1313,8 @@ function clearLogs() {
   renderLogs(); renderMiniLogs(); renderUsersFilterDropdown();
 }
 
-// ===== EXPORT CSV =====
+// ===== EXPORT FUNCTIONS =====
+
 function exportTableToExcel(tableId, filename) {
   const table = document.getElementById(tableId);
   if (!table) { alert("لم يتم العثور على الجدول."); return; }
@@ -1326,8 +1327,100 @@ function exportTableToExcel(tableId, filename) {
   link.href = URL.createObjectURL(blob);
   link.download = `${filename}_${new Date().toISOString().split("T")[0]}.csv`;
   document.body.appendChild(link); link.click(); document.body.removeChild(link);
-  recordActivityLog("تصدير تقرير", filename);
+  recordActivityLog("تصدير Excel/CSV", filename);
 }
+
+function exportTableToPDF(tableId, reportTitle) {
+  const table = document.getElementById(tableId);
+  if (!table) { alert("لم يتم العثور على الجدول."); return; }
+  const dateStr = new Date().toLocaleDateString('ar-EG', { year:'numeric', month:'long', day:'numeric' });
+  const userInfo = USERS_INFO[appState.currentRole];
+  const rows = Array.from(table.querySelectorAll("tr")).map(row =>
+    Array.from(row.querySelectorAll("th,td")).map(c => c.innerText.trim())
+  );
+  let tableHtml = "<table><thead>" +
+    (rows[0] ? `<tr>${rows[0].map(h => `<th>${h}</th>`).join("")}</tr>` : "") +
+    "</thead><tbody>" +
+    rows.slice(1).map(r => `<tr>${r.map(d => `<td>${d}</td>`).join("")}</tr>`).join("") +
+    "</tbody></table>";
+
+  const win = window.open("", "_blank", "width=900,height=700");
+  win.document.write(`<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>${reportTitle}</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Cairo', sans-serif; direction: rtl; background: #fff; color: #1a1a2e; padding: 30px; }
+  .report-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 3px solid #7c3aed; }
+  .logo-block { display: flex; align-items: center; gap: 10px; }
+  .logo-icon { width: 44px; height: 44px; background: linear-gradient(135deg,#7c3aed,#8b5cf6); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: #fff; }
+  .logo-text { font-size: 1.2rem; font-weight: 800; color: #7c3aed; }
+  .report-meta { text-align: left; font-size: 0.78rem; color: #666; }
+  .report-meta strong { display: block; font-size: 1rem; color: #1a1a2e; margin-bottom: 4px; }
+  h2 { font-size: 1.15rem; font-weight: 800; color: #1a1a2e; margin-bottom: 16px; }
+  .info-row { display: flex; gap: 20px; margin-bottom: 20px; font-size: 0.82rem; color: #555; flex-wrap: wrap; }
+  .info-row span { background: #f3f0ff; border-radius: 6px; padding: 4px 12px; font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  th { background: #7c3aed; color: #fff; padding: 10px 12px; text-align: right; font-weight: 700; }
+  td { padding: 9px 12px; border-bottom: 1px solid #e5e7eb; text-align: right; }
+  tr:nth-child(even) td { background: #f9fafb; }
+  tr:hover td { background: #f3f0ff; }
+  .footer { margin-top: 24px; font-size: 0.72rem; color: #aaa; text-align: center; border-top: 1px solid #e5e7eb; padding-top: 12px; }
+  @media print {
+    body { padding: 15px; }
+    button { display: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="report-header">
+  <div class="logo-block">
+    <div class="logo-icon">🎓</div>
+    <span class="logo-text">مِنَصَّتِي PRO</span>
+  </div>
+  <div class="report-meta">
+    <strong>${reportTitle}</strong>
+    تاريخ الإصدار: ${dateStr}<br>
+    أُعِدَّ بواسطة: ${userInfo.name}
+  </div>
+</div>
+<h2>📊 ${reportTitle}</h2>
+<div class="info-row">
+  <span>📅 التاريخ: ${dateStr}</span>
+  <span>👤 المُصدَّر بواسطة: ${userInfo.name}</span>
+  <span>📋 عدد السجلات: ${rows.length - 1} صف</span>
+</div>
+${tableHtml}
+<div class="footer">
+  هذا التقرير صادر آلياً من منصة منصتي PRO — جميع الحقوق محفوظة © ${new Date().getFullYear()}
+</div>
+<br>
+<button onclick="window.print()" style="font-family:Cairo,sans-serif;background:#7c3aed;color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:0.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;margin:auto;">🖨️ طباعة / حفظ كـ PDF</button>
+</body>
+</html>`);
+  win.document.close();
+  recordActivityLog("تصدير PDF", reportTitle);
+}
+
+// ===== EXPORT DROPDOWN LOGIC =====
+function toggleExportMenu(btn) {
+  const menu = btn.nextElementSibling;
+  if (!menu) return;
+  const isOpen = menu.classList.contains("open");
+  // Close all open menus first
+  document.querySelectorAll(".export-dropdown-menu.open").forEach(m => m.classList.remove("open"));
+  if (!isOpen) menu.classList.add("open");
+}
+
+// Close export menus when clicking outside
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".export-dropdown")) {
+    document.querySelectorAll(".export-dropdown-menu.open").forEach(m => m.classList.remove("open"));
+  }
+});
 
 // ===== MODALS =====
 function openModal(id) { const el = document.getElementById(id); if (el) el.classList.add("active"); }

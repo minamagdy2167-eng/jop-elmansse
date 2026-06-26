@@ -322,7 +322,20 @@
 
           <div class="section-header mt-2">
             <span class="section-title">📊 نتائج الطلاب</span>
-            <button class="btn btn-outline btn-sm" onclick="exportTableToExcel('quizResultsTable','نتائج_الاختبارات')">📥 تصدير CSV</button>
+            <div class="export-dropdown">
+              <button class="btn btn-outline btn-sm" onclick="toggleExportMenu(this)">📥 تصدير ▾</button>
+              <div class="export-dropdown-menu">
+                <button class="export-dropdown-item excel" onclick="exportTableToExcel('quizResultsTable','نتائج_الاختبارات')">
+                  <span class="item-icon">📊</span><span class="item-label">Excel / CSV</span><span class="item-badge">XLS</span>
+                </button>
+                <button class="export-dropdown-item pdf" onclick="exportTableToPDF('quizResultsTable','نتائج الاختبارات والتقييم')">
+                  <span class="item-icon">📄</span><span class="item-label">تقرير PDF</span><span class="item-badge">PDF</span>
+                </button>
+                <button class="export-dropdown-item print" onclick="window.print()">
+                  <span class="item-icon">🖨️</span><span class="item-label">طباعة مباشرة</span><span class="item-badge">PRINT</span>
+                </button>
+              </div>
+            </div>
           </div>
           <div class="table-wrapper">
             <table id="quizResultsTable">
@@ -352,7 +365,20 @@
             <span class="section-title">📊 الحضور والغياب</span>
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
               <button class="btn btn-primary editor-only" onclick="openAddAttendanceModal()">+ تسجيل حضور</button>
-              <button class="btn btn-outline btn-sm" onclick="exportTableToExcel('attMainTable','سجل_الحضور')">📥 تصدير</button>
+              <div class="export-dropdown">
+                <button class="btn btn-outline btn-sm" onclick="toggleExportMenu(this)">📥 تصدير ▾</button>
+                <div class="export-dropdown-menu">
+                  <button class="export-dropdown-item excel" onclick="exportTableToExcel('attMainTable','سجل_الحضور')">
+                    <span class="item-icon">📊</span><span class="item-label">Excel / CSV</span><span class="item-badge">XLS</span>
+                  </button>
+                  <button class="export-dropdown-item pdf" onclick="exportTableToPDF('attMainTable','سجل الحضور والغياب')">
+                    <span class="item-icon">📄</span><span class="item-label">تقرير PDF</span><span class="item-badge">PDF</span>
+                  </button>
+                  <button class="export-dropdown-item print" onclick="window.print()">
+                    <span class="item-icon">🖨️</span><span class="item-label">طباعة مباشرة</span><span class="item-badge">PRINT</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
           <div class="attendance-stats">
@@ -399,7 +425,20 @@
                 <svg viewBox="0 0 24 24"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
                 <input type="text" id="watchSearchInput" class="search-input" placeholder="بحث...">
               </div>
-              <button class="btn btn-outline btn-sm" onclick="exportTableToExcel('watchMainTable','تتبع_المشاهدات')">📥 تصدير</button>
+              <div class="export-dropdown">
+                <button class="btn btn-outline btn-sm" onclick="toggleExportMenu(this)">📥 تصدير ▾</button>
+                <div class="export-dropdown-menu">
+                  <button class="export-dropdown-item excel" onclick="exportTableToExcel('watchMainTable','تتبع_المشاهدات')">
+                    <span class="item-icon">📊</span><span class="item-label">Excel / CSV</span><span class="item-badge">XLS</span>
+                  </button>
+                  <button class="export-dropdown-item pdf" onclick="exportTableToPDF('watchMainTable','تقرير تتبع مشاهدات المحاضرات')">
+                    <span class="item-icon">📄</span><span class="item-label">تقرير PDF</span><span class="item-badge">PDF</span>
+                  </button>
+                  <button class="export-dropdown-item print" onclick="window.print()">
+                    <span class="item-icon">🖨️</span><span class="item-label">طباعة مباشرة</span><span class="item-badge">PRINT</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
           <div class="table-wrapper">
@@ -583,7 +622,20 @@
               <select id="logUserFilter" class="form-select" style="width:auto;padding:6px 10px;">
                 <option value="">كل المستخدمين</option>
               </select>
-              <button class="btn btn-outline btn-sm" onclick="exportTableToExcel('logsMainTable','سجل_العمليات')">📥 تصدير</button>
+              <div class="export-dropdown">
+                <button class="btn btn-outline btn-sm" onclick="toggleExportMenu(this)">📥 تصدير ▾</button>
+                <div class="export-dropdown-menu">
+                  <button class="export-dropdown-item excel" onclick="exportTableToExcel('logsMainTable','سجل_العمليات')">
+                    <span class="item-icon">📊</span><span class="item-label">Excel / CSV</span><span class="item-badge">XLS</span>
+                  </button>
+                  <button class="export-dropdown-item pdf" onclick="exportTableToPDF('logsMainTable','سجل العمليات والأمان')">
+                    <span class="item-icon">📄</span><span class="item-label">تقرير PDF</span><span class="item-badge">PDF</span>
+                  </button>
+                  <button class="export-dropdown-item print" onclick="window.print()">
+                    <span class="item-icon">🖨️</span><span class="item-label">طباعة مباشرة</span><span class="item-badge">PRINT</span>
+                  </button>
+                </div>
+              </div>
               <button class="btn btn-danger btn-sm" onclick="clearLogs()">🗑️ تصفير</button>
             </div>
           </div>
